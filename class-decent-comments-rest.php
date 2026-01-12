@@ -332,7 +332,7 @@ class Decent_Comments_Rest {
 						return new WP_Error(
 							'rest_forbidden_param',
 							/* translators: %s: List of forbidden parameters. */
-								sprintf( __( 'Query parameter not permitted: %s', 'decent-comments' ), implode( ', ', $forbidden_params ) ),
+							sprintf( __( 'Query parameter not permitted: %s', 'decent-comments' ), implode( ', ', $forbidden_params ) ),
 							array( 'status' => rest_authorization_required_code() )
 						);
 					}
