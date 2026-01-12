@@ -57,8 +57,8 @@ class Decent_Comments_Blocks {
 				'decent-comments-block-view',
 				'decentCommentsView',
 				array(
-					'nonce'    => wp_create_nonce('wp_rest'),
-					'site_url' => get_site_url(),
+					'nonce'           => wp_create_nonce( 'wp_rest' ),
+					'site_url'        => get_site_url(),
 					'current_post_id' => $current_post_id,
 					'current_term_id' => $current_term_id
 				)
@@ -93,7 +93,7 @@ class Decent_Comments_Blocks {
 			'decent-comments-block-editor',
 			'decentCommentsEdit',
 			array(
-				'nonce' => wp_create_nonce( 'wp_rest' ),
+				'nonce'      => wp_create_nonce( 'wp_rest' ),
 				'post_types' => self::get_post_types(),
 				'current_id' => get_queried_object_id()
 			)
