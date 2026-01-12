@@ -19,6 +19,10 @@
  * @since decent-comments 3.0.0
  */
 
+if( !defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * REST API handling.
  */
@@ -39,7 +43,7 @@ class Decent_Comments_Rest {
 			'decent-comments/v1', '/comments', array(
 			'methods'             => WP_REST_Server::READABLE,
 			'callback'            => array( __CLASS__, 'decent_comments_rest_endpoint' ),
-			'permission_callback' => '__return_true', // Public access; adjust as needed
+			'permission_callback' => array( __CLASS__, 'decent_comments_rest_permission_callback' ),
 			'args' => array(
 				'number' => array(
 					'default'           => 5,
@@ -94,7 +98,7 @@ class Decent_Comments_Rest {
 					'validate_callback' => 'rest_validate_request_arg'
 				),
 				'orderby' => array(
-					'default'           => 'comment_author_email',
+					'default'           => 'comment_date_gmt',
 					'required'          => false,
 					'type'              => 'string',
 					'sanitize_callback' => 'sanitize_text_field',
@@ -296,6 +300,47 @@ class Decent_Comments_Rest {
 			200
 		);
 
+	}
+
+	/**
+	 * Permission callback for the REST endpoint
+	 *
+	 * @since 3.0.3
+	 * @param WP_REST_Request $request
+	 * @return WP_Error|boolean
+	 */
+	public static function decent_comments_rest_permission_callback( $request ) {
+		$forbidden_params = array();
+		$protected_params = array( 'comment_author_email' );
+
+		foreach ( $protected_params as $param ) {
+			if ( $param === 'comment_author_email' ) {
+				if (
+					$request['orderby'] === $param &&
+					!get_current_user_id()
+				) {
+					$forbidden_params[] = $param;
+				}
+			}
+		}
+
+		if ( ! empty( $forbidden_params ) ) {
+			$request_headers = $request->get_headers();
+			if ( isset( $request_headers['authorization'] ) ) {
+				if ( isset( $request_headers['authorization'][0] ) ) {
+					if ( !wp_verify_nonce( $request_headers['authorization'][0], 'wp_rest' ) ) {
+						return new WP_Error(
+							'rest_forbidden_param',
+							/* translators: %s: List of forbidden parameters. */
+								sprintf( __( 'Query parameter not permitted: %s', 'decent-comments' ), implode( ', ', $forbidden_params ) ),
+							array( 'status' => rest_authorization_required_code() )
+						);
+					}
+				}
+			}
+		}
+
+		return true;
 	}
 
 	/**
