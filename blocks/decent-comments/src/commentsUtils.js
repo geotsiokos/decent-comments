@@ -60,7 +60,7 @@ export function parseAttributes(data) {
 	return JSON.parse(data || '{}');
 }
 
-export async function fetchComments(attributes, nonce = null) {
+export async function fetchComments(attributes, token = null) {
 	const query = buildQuery(attributes);
 
 	try {
@@ -68,7 +68,7 @@ export async function fetchComments(attributes, nonce = null) {
 			path: `decent-comments/v1/comments?${query.toString()}`,
 			method: 'GET',
 			headers: {
-				'Authorization': nonce,
+				'Authorization': token,
 				'Content-Type': 'application/json',
 			},
 		});
