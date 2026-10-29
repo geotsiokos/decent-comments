@@ -215,18 +215,23 @@ class Decent_Comments_Renderer {
 		// output
 		$output = '';
 
-		extract( self::$defaults );
-
 		// comment selection options
+		$number = self::$defaults['number'];
 		if ( isset( $options['number'] ) ) {
 			$number = intval( $options['number'] );
 		}
+
+		$order = self::$defaults['order'];
 		if ( isset( $options['order'] ) ) {
 			$order = ( 'ASC' == strtoupper( $options['order'] ) ) ? 'ASC' : 'DESC';
 		}
+
+		$orderby = self::$defaults['orderby'];
 		if ( isset( $options['orderby'] ) ) {
 			$orderby = $options['orderby'];
 		}
+
+		$post_id = self::$defaults['post_id'];
 		if ( isset( $options['post_id'] ) && ( $options['post_id'] !== null ) ) {
 			if ( ( "{current}" == $options['post_id'] ) || ( "[current]" == $options['post_id'] ) ) {
 				$post_id = get_the_ID();
@@ -235,6 +240,7 @@ class Decent_Comments_Renderer {
 			}
 		}
 
+		$post_type = self::$defaults['post_type'];
 		if ( isset( $options['post_type'] ) ) {
 			$post_types = get_post_types( array( 'public' => true ) );
 			$options['post_type'] = array_map( 'trim', explode( ',', $options['post_type'] ) );
@@ -262,10 +268,12 @@ class Decent_Comments_Renderer {
 		}
 
 		// Any chosen terms? - Needs taxonomy to be given as well.
+		$terms = self::$defaults['terms'];
 		if ( isset( $options['terms'] ) ) {
 			$terms = $options['terms'];
 		}
 		// Any term ids given? - Needs taxonomy to be given as well.
+		$term_ids = self::$defaults['term_ids'];
 		if ( isset( $options['term_ids'] ) ) {
 			$term_ids = $options['term_ids'];
 		}
@@ -289,17 +297,22 @@ class Decent_Comments_Renderer {
 				}
 			}
 		}
+
+		$pingback = self::$defaults['pingback'];
 		if ( isset( $options['pingback'] ) ) {
 			$pingback = ( $options['pingback'] !== 'false' && $options['pingback'] !== false );
 		}
+		$trackback = self::$defaults['trackback'];
 		if ( isset( $options['trackback'] ) ) {
 			$trackback = ( $options['trackback'] === 'false' && $options['pingback'] !== false );
 		}
+		$exclude_post_author = self::$defaults['exclude_post_author'];
 		if ( isset( $options['exclude_post_author'] ) ) {
 			$exclude_post_author = $options['exclude_post_author'] === 'true' || $options['exclude_post_author'] === true;
 		}
 
 		// @since 1.10.0
+		// @todo No default post_status?????
 		if ( isset( $options['post_status'] ) ) {
 			$post_status = $options['post_status'];
 			if ( is_string( $post_status ) ) {
@@ -310,6 +323,7 @@ class Decent_Comments_Renderer {
 		}
 
 		// @since 1.11.0
+		$user_id = self::$defaults['user_id'];
 		if ( isset( $options['user_id'] ) && is_numeric( $options['user_id'] ) ) {
 			$user_id = intval( $options['user_id'] );
 			if ( $user_id < 0 ) {
@@ -318,6 +332,7 @@ class Decent_Comments_Renderer {
 		}
 
 		// @since 1.11.0
+		$search = self::$defaults['search'];
 		if ( !empty( $options['search'] ) && is_string( $options['search'] ) ) {
 			$search = trim( $options['search'] );
 			if ( strlen( $search ) === 0 ) {
