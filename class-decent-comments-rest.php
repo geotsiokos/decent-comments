@@ -353,30 +353,6 @@ class Decent_Comments_Rest {
 		return true;
 	}
 
-	public static function generate_token( $request_args = array() ) {
-
-		if ( !is_user_logged_in() ) {
-			return false;
-		}
-
-		$current_user_id = get_current_user_id();
-		$existing_token = get_transient( 'decent_comments_rest_token_' . $current_user_id );
-		if ( $existing_token !== false ) {
-			$token = $existing_token;
-		} else {
-			$data = array(
-				'args' => $request_args,
-				'time' => time(),
-				'salt' => rand( 0, PHP_INT_MAX )
-			);
-
-			$token = hash( 'sha256', json_encode( $data ) );
-			set_transient( 'decent_comments_rest_token', $token, HOUR_IN_SECONDS );
-
-		}
-		return $token;
-	}
-
 	/**
 	 * Provide the post author for display.
 	 *
